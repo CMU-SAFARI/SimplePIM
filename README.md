@@ -22,7 +22,7 @@ Getting Started
 
 Clone the repository:
 ```
-$ git clone https://github.com/JinfanC/SimplePIM.git
+$ git clone https://github.com/CMU-SAFARI/SimplePIM.git
 $ cd SimplePIM
 ```
 
@@ -48,4 +48,4 @@ $ ./bin/host
 ```
 
 ## Getting Help
-If you have any suggestions for improvement, please contact georgcjf at gmail dot com. If you find any bugs or have further questions or requests, please post an issue at the [issue page](https://github.com/JinfanC/SimplePIM/issues).
+If you have any suggestions for improvement, please contact georgcjf at gmail dot com. If you find any bugs or have further questions or requests, please post an issue at the [issue page](https://github.com/CMU-SAFARI/SimplePIM/issues).

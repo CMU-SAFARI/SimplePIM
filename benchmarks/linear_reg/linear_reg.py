@@ -104,6 +104,8 @@ def main():
     np.savetxt(path, np.array([t]))
 
 if __name__ == "__main__":
+    if not os.path.exists("data/"):
+        os.mkdir("data/")
     with parallel_backend('threading', n_jobs=num_threads):
         main()
     

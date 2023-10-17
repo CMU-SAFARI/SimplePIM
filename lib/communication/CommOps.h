@@ -14,4 +14,6 @@ void* malloc_broadcast_aligned(uint32_t len, uint32_t type_size, smalltable_mana
 void small_table_scatter(char* const table_id, void* elements, uint64_t len, uint32_t type_size, smalltable_management_t* table_management);
 void* small_table_gather(char* const table_id, smalltable_management_t* table_management);
 void small_table_broadcast(char* const table_id, void* elements, uint64_t len, uint32_t type_size, smalltable_management_t* table_management);
+void simplepim_allgather(char* const table_id, char* const new_table_id, smalltable_management_t* table_management);
+void simplepim_allreduce(char* const table_id, handle_t* binary_handle, smalltable_management_t* table_management);
 #endif 

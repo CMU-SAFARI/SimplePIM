@@ -139,6 +139,14 @@ void* small_table_gather(char* const table_id, smalltable_management_t* table_ma
 
 }
 
+void simplepim_allgather(char* const table_id, char* const new_table_id, smalltable_management_t* table_management){
+
+}
+
+void simplepim_allreduce(char* const table_id, handle_t* binary_handle, smalltable_management_t* table_management){
+
+}
+
 void small_table_broadcast(char* const table_id, void* elements, uint64_t len, uint32_t type_size, smalltable_management_t* table_management){
     uint32_t curr_offset = table_management->free_space_start_pos;
     if(contains_table(table_id, table_management)){

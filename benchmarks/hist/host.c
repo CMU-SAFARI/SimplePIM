@@ -48,7 +48,7 @@ void add(void* p1, void* p2){
 
 void run(){
     printf("the number of elements %lu\n", nr_elements);
-    smalltable_management_t* table_management = table_management_init(dpu_number);
+    simplepim_management_t* table_management = table_management_init(dpu_number);
     T* A = (T*)malloc_scatter_aligned(nr_elements, sizeof(T), table_management);
 
     uint32_t* histo = (uint32_t*)malloc(sizeof(uint32_t)*bins);
@@ -57,7 +57,7 @@ void run(){
     histogram_host(histo, A);
     printf_hist(histo);
 
-    small_table_scatter("t1", A, nr_elements, sizeof(T), table_management);
+    simplepim_scatter("t1", A, nr_elements, sizeof(T), table_management);
     printf("end of data transfer\n");
  
     handle_t* va_handle = create_handle("hist_funcs", REDUCE);

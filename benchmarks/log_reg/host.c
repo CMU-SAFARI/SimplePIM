@@ -120,7 +120,7 @@ void compute_gradients(const T*arr){
 
 
 int main(){
-  smalltable_management_t* table_management = table_management_init(dpu_number);
+  simplepim_management_t* table_management = table_management_init(dpu_number);
 
   printf("dim: %d, num_elem: %d, iter: %d, lr: %f \n", dim, num_elements, iter, lr);
   // data contains y also as last element
@@ -153,9 +153,9 @@ int main(){
 
   printf("end of reading data from file\n");
 
-  small_table_scatter("t1", elements, num_elements, (dim+1)*sizeof(T), table_management);
+  simplepim_scatter("t1", elements, num_elements, (dim+1)*sizeof(T), table_management);
   uint32_t data_offset = lookup_table("t1", table_management)->end; 
-  small_table_broadcast("t2", weights, 1, dim*sizeof(T),  table_management);
+  simplepim_broadcast("t2", weights, 1, dim*sizeof(T),  table_management);
 
   handle_t* va_handle = create_handle("log_reg_funcs", REDUCE);
   T* res = table_gen_red("t1", "t3", dim*sizeof(T), 1, va_handle, table_management, data_offset);

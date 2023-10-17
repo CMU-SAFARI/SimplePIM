@@ -1,8 +1,10 @@
 #include "Map.h"
-int i;
-struct dpu_set_t dpu;
 
-void table_map(const char* src_name, const char* dest_name, uint32_t output_type, handle_t* binary_handle, smalltable_management_t* table_management, uint32_t info){
+void table_map(const char* src_name, const char* dest_name, uint32_t output_type, handle_t* binary_handle, simplepim_management_t* table_management, uint32_t info){
+    int i;
+    struct dpu_set_t dpu;
+    struct timeval start_time;
+    struct timeval end_time;
     
     uint32_t outputs = table_management->free_space_start_pos;
     if(contains_table(dest_name, table_management)){

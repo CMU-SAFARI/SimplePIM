@@ -113,7 +113,7 @@ void get_output_file(int num_dpus, int dim, int num_elem, int k){
 
 
 void run(){
-  smalltable_management_t* table_management = table_management_init(dpu_number);
+  simplepim_management_t* table_management = table_management_init(dpu_number);
   printf("k: %d, dim: %d, num_elem: %d, iter: %d \n", k, dim, num_elements, iter);
 
 
@@ -134,11 +134,11 @@ void run(){
 
   handle_t* va_handle = create_handle("kmeans_funcs", REDUCE);
 
-  small_table_scatter("t1", elements, num_elements, dim*sizeof(T), table_management);; 
+  simplepim_scatter("t1", elements, num_elements, dim*sizeof(T), table_management);; 
   uint32_t data_offset = lookup_table("t1", table_management)->end;
   // main loop
   for(int m=0; m<iter; m++){
-    small_table_broadcast("t2", centroids, k, dim*sizeof(T), table_management);
+    simplepim_broadcast("t2", centroids, k, dim*sizeof(T), table_management);
     T* res = table_gen_red("t1", "t3", dim*sizeof(T)+sizeof(int32_t), k, va_handle, table_management, data_offset);
 
 

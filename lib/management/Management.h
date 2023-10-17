@@ -41,14 +41,14 @@ typedef struct {
    gen_red_arguments_t* red_args;
    // one could do memory management with more complex logic, currently just increment counter for each new array 
    uint32_t free_space_start_pos;
-} smalltable_management_t;
+} simplepim_management_t;
 
 
-smalltable_management_t* table_management_init(uint32_t num_dpus);
-void add_table(table_host_t* table, smalltable_management_t* management);
-uint32_t contains_table(const char* name, smalltable_management_t* management);
-table_host_t* lookup_table(const char* name, smalltable_management_t* management);
-void free_table(const char* name, smalltable_management_t* management);
+simplepim_management_t* table_management_init(uint32_t num_dpus);
+void add_table(table_host_t* table, simplepim_management_t* management);
+uint32_t contains_table(const char* name, simplepim_management_t* management);
+table_host_t* lookup_table(const char* name, simplepim_management_t* management);
+void free_table(const char* name, simplepim_management_t* management);
 uint32_t max_len_dpu(uint32_t num_dpus, table_host_t* table);
 
 #endif 

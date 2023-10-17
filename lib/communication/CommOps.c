@@ -1,6 +1,5 @@
 #include "CommOps.h"
-
-void* malloc_scatter_aligned(uint64_t len, uint32_t type_size, smalltable_management_t* table_management){
+void* malloc_scatter_aligned(uint64_t len, uint32_t type_size, simplepim_management_t* table_management){
     uint32_t num_dpus = table_management->num_dpus;
     uint32_t pad_len = calculate_pad_len(len , type_size, num_dpus);
     uint64_t len_in_byte = len * (uint64_t)type_size;
@@ -10,7 +9,7 @@ void* malloc_scatter_aligned(uint64_t len, uint32_t type_size, smalltable_manage
     return ptr;
 }
 
-void* malloc_reduce_aligned(uint32_t len, uint32_t type_size, smalltable_management_t* table_management){
+void* malloc_reduce_aligned(uint32_t len, uint32_t type_size, simplepim_management_t* table_management){
     uint32_t num_dpus = table_management->num_dpus;
     uint64_t len_in_byte = len * type_size;
     uint64_t pad_len = 8-len_in_byte%8;
@@ -20,7 +19,7 @@ void* malloc_reduce_aligned(uint32_t len, uint32_t type_size, smalltable_managem
     return ptr;
 }
 
-void* malloc_broadcast_aligned(uint32_t len, uint32_t type_size, smalltable_management_t* table_management){
+void* malloc_broadcast_aligned(uint32_t len, uint32_t type_size, simplepim_management_t* table_management){
     uint64_t len_in_byte = (uint64_t)len * type_size;
     uint64_t pad_len = 8-len_in_byte%8;
 
@@ -29,7 +28,7 @@ void* malloc_broadcast_aligned(uint32_t len, uint32_t type_size, smalltable_mana
     return ptr;
 }
 
-void small_table_scatter(char* const table_id, void* elements, uint64_t len, uint32_t type_size, smalltable_management_t* table_management){
+void simplepim_scatter(char* const table_id, void* elements, uint64_t len, uint32_t type_size, simplepim_management_t* table_management){
     uint32_t curr_offset = table_management->free_space_start_pos;
     if(contains_table(table_id, table_management)){
         curr_offset = lookup_table(table_id, table_management) -> start;
@@ -91,7 +90,7 @@ void small_table_scatter(char* const table_id, void* elements, uint64_t len, uin
     table_management->free_space_start_pos = table_management->free_space_start_pos > t->end ? table_management->free_space_start_pos : t->end;
 }
 
-void* small_table_gather(char* const table_id, smalltable_management_t* table_management){
+void* simplepim_gather(char* const table_id, simplepim_management_t* table_management){
     if(!contains_table(table_id, table_management)){
         printf(table_id);
         printf(" is not contained in table management unit, invalid scatter\n");
@@ -112,8 +111,8 @@ void* small_table_gather(char* const table_id, smalltable_management_t* table_ma
     uint64_t buff_size = aligned_max_len*num_dpus;
     uint64_t total_size = t->len*t->table_type_size;
     struct dpu_set_t set = table_management->set;
-    void* tmp_buffer = malloc((uint64_t)num_dpus*aligned_max_len);
-    void* res = malloc(total_size);
+    void* tmp_buffer = malloc((uint64_t)num_dpus*aligned_max_len+2048);
+    void* res = malloc(total_size + 2048);
 
     int i;
     struct dpu_set_t dpu;
@@ -126,6 +125,7 @@ void* small_table_gather(char* const table_id, smalltable_management_t* table_ma
     void* ptr_in_res = (void*)res;
     uint32_t curr_size;
 
+    
     for(int j=0; j<num_dpus; j++){
         curr_size = type_size*lens[j];
         memcpy(ptr_in_res, buff_ptr, curr_size);
@@ -139,15 +139,7 @@ void* small_table_gather(char* const table_id, smalltable_management_t* table_ma
 
 }
 
-void simplepim_allgather(char* const table_id, char* const new_table_id, smalltable_management_t* table_management){
-
-}
-
-void simplepim_allreduce(char* const table_id, handle_t* binary_handle, smalltable_management_t* table_management){
-
-}
-
-void small_table_broadcast(char* const table_id, void* elements, uint64_t len, uint32_t type_size, smalltable_management_t* table_management){
+void simplepim_broadcast(char* const table_id, void* elements, uint64_t len, uint32_t type_size, simplepim_management_t* table_management){
     uint32_t curr_offset = table_management->free_space_start_pos;
     if(contains_table(table_id, table_management)){
     	curr_offset = lookup_table(table_id, table_management) -> start;
@@ -175,5 +167,89 @@ void small_table_broadcast(char* const table_id, void* elements, uint64_t len, u
     t->is_virtual_zipped = 0;
     add_table(t, table_management);	
     table_management->free_space_start_pos = t->end > table_management->free_space_start_pos ? t->end : table_management->free_space_start_pos;
+}
+
+void simplepim_allgather(char* const table_id, char* const new_table_id, simplepim_management_t* table_management){
+    if(!contains_table(table_id, table_management)){
+        printf(table_id);
+        printf(" is not contained in table management unit, invalid allgather\n");
+        return;
+    }
+
+    uint32_t num_dpus = table_management->num_dpus; 
+    table_host_t* t = lookup_table(table_id, table_management);
+    uint32_t* lens = t->lens_each_dpu;
+    uint32_t type_size = t->table_type_size;
+
+    uint32_t total_len = 0;
+
+    for(int i=0; i<num_dpus; i++){
+        total_len += lens[i];
+    }
+
+    void* bc_buffer = malloc_broadcast_aligned(total_len, type_size, table_management);
+    void* res = simplepim_gather(table_id, table_management);
+    memcpy(bc_buffer, res, total_len*type_size);
+    simplepim_broadcast(new_table_id, bc_buffer, total_len, type_size, table_management);
+
+
+    free(bc_buffer);
+
+}
+
+void combine_func(void* p1, void* p2){
+    int32_t* int_p1 = (int32_t*)p1;
+    int32_t* int_p2 = (int32_t*)p2;
+    *int_p1 += *int_p2;
+}
+
+void simplepim_allreduce(char* const table_id, handle_t* binary_handle, simplepim_management_t* table_management){
+    if(binary_handle->func_type == 1){
+        if(!contains_table(table_id, table_management)){
+            printf("source table ");
+            printf(table_id);
+            printf(" is not contains in current management unit\n");
+            return;
+        }
+
+        uint32_t num_dpus = table_management->num_dpus; 
+        table_host_t* t = lookup_table(table_id, table_management);
+        uint32_t* lens = t->lens_each_dpu;
+        uint32_t type_size = t->table_type_size;
+        uint32_t len = lens[0];
+
+        for(int i=0; i<num_dpus; i++){
+            if(lens[i] != len){
+                printf("can not call allreduce on inequal length array\n");
+                return;
+            }
+        }
+
+        void* res = simplepim_gather(table_id, table_management);
+        for(int i=1; i<num_dpus; i++){
+            int offset = i*len*type_size;
+            for(int j=0; j<len; j++){
+                combine_func(res+j*type_size, res+offset+j*type_size);
+            }
+        }
+
+        void* bc_buffer = malloc_broadcast_aligned(len, type_size, table_management);
+
+        memcpy(bc_buffer, res, len*type_size);
+
+        uint64_t outputs_pos = lookup_table(table_id, table_management) -> start;
+        uint64_t broadcast_size = (len*type_size)+8-(len*type_size)%8;
+        struct dpu_set_t set = table_management->set;
+        DPU_ASSERT(dpu_broadcast_to(set, DPU_MRAM_HEAP_POINTER_NAME, outputs_pos, bc_buffer, broadcast_size, DPU_XFER_DEFAULT));
+
+        free(bc_buffer);
+    
+    }
+    else{
+        printf("ERROR: compiled binary ");
+        printf(binary_handle->bin_location);
+        printf(" does not contain general reduction functions\n");
+    }
+
 }
 

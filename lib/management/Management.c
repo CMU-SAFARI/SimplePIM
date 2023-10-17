@@ -1,11 +1,11 @@
 #include "Management.h"
-smalltable_management_t* table_management_init(uint32_t num_dpus){
+simplepim_management_t* table_management_init(uint32_t num_dpus){
 
     struct dpu_set_t set;
     DPU_ASSERT(dpu_alloc(num_dpus, NULL, &set));
     
     small_table_init(set);
-    smalltable_management_t* management = malloc(sizeof(smalltable_management_t));
+    simplepim_management_t* management = malloc(sizeof(simplepim_management_t));
     management->set = set;
     management->num_dpus = num_dpus;
     management->num_tables = 0;
@@ -18,7 +18,7 @@ smalltable_management_t* table_management_init(uint32_t num_dpus){
     return management;
 }
 
-void add_table(table_host_t* table, smalltable_management_t* management){
+void add_table(table_host_t* table, simplepim_management_t* management){
     uint32_t num_tables = management->num_tables;
     for(int i=0; i<num_tables; i++){
         if(strcmp("", management->tables[i]->name)==0){
@@ -43,7 +43,7 @@ void add_table(table_host_t* table, smalltable_management_t* management){
 }
 
 
-uint32_t contains_table(const char* name, smalltable_management_t* management){
+uint32_t contains_table(const char* name, simplepim_management_t* management){
     uint32_t num_tables = management->num_tables;
     for(int i=0; i<num_tables; i++){
         if(strcmp(name, management->tables[i]->name)==0){
@@ -54,14 +54,14 @@ uint32_t contains_table(const char* name, smalltable_management_t* management){
     return 0;
 }
 
-void free_table(const char* name, smalltable_management_t* management){
+void free_table(const char* name, simplepim_management_t* management){
     if(!contains_table(name, management)){
         return;
     }
     lookup_table(name, management)->name = "";
 }
 
-table_host_t* lookup_table(const char* name, smalltable_management_t* management){
+table_host_t* lookup_table(const char* name, simplepim_management_t* management){
     uint32_t num_tables = management->num_tables;
     for(int i=0; i<num_tables; i++){
         if(strcmp(name, management->tables[i]->name)==0){

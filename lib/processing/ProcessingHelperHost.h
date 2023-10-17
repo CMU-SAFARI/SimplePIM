@@ -16,8 +16,8 @@ typedef struct {
    uint32_t func_type;
 } handle_t;
 
-struct timeval start_time;
-struct timeval end_time;
+//struct timeval start_time;
+//struct timeval end_time;
 
 // type 0 is map, type 1 is gen_red, type 2 is zip
 handle_t* create_handle(const char* func_fname, uint32_t func_type);

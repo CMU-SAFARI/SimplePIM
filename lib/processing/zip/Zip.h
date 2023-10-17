@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <sys/time.h>
 #include <dpu.h>
-void table_zip(const char* src1_name, const char* src2_name, const char* dest_name,  handle_t* binary_handle, smalltable_management_t* table_management);
+void table_zip(const char* src1_name, const char* src2_name, const char* dest_name,  handle_t* binary_handle, simplepim_management_t* table_management);
 #endif 

@@ -35,12 +35,12 @@ static T reduction_host(T* A) {
 }
 
 void run(){
-    smalltable_management_t* table_management = table_management_init(dpu_number);
+    simplepim_management_t* table_management = table_management_init(dpu_number);
     T* A = (T*)malloc_scatter_aligned(nr_elements, sizeof(T), table_management);
     init(A);
     T correct_res = reduction_host(A);
 
-    small_table_scatter("t1", A, nr_elements, sizeof(T), table_management);
+    simplepim_scatter("t1", A, nr_elements, sizeof(T), table_management);
     printf("end of data transfer\n");
 
     handle_t* va_handle = create_handle("red_funcs", REDUCE);

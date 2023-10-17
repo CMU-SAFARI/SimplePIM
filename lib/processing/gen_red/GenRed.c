@@ -1,6 +1,5 @@
 #include "GenRed.h"
-int i;
-struct dpu_set_t dpu;
+
 
 void combine_table_entries(void* table1, void* table2, uint32_t table_size, uint32_t value_size, void (*combineFunc)(void*, void*)){
     
@@ -14,7 +13,9 @@ void combine_table_entries(void* table1, void* table2, uint32_t table_size, uint
 
 }
 
-void gather_tables_to_host(smalltable_management_t* table_management, void* my_table, uint32_t len, uint32_t type_size, uint32_t curr_offset_on_mram, void (*init_func)(uint32_t, void*) ,void (*combineFunc)(void*, void*)){
+void gather_tables_to_host(simplepim_management_t* table_management, void* my_table, uint32_t len, uint32_t type_size, uint32_t curr_offset_on_mram, void (*init_func)(uint32_t, void*) ,void (*combineFunc)(void*, void*)){
+    int i;
+    struct dpu_set_t dpu;
     struct dpu_set_t set = table_management->set;
     uint32_t num_dpus = table_management->num_dpus;
     void* tables = malloc_reduce_aligned(len, type_size, table_management);
@@ -76,7 +77,11 @@ void gather_tables_to_host(smalltable_management_t* table_management, void* my_t
 
 }
 
-void* table_gen_red(const char* src_name, const char* dest_name, uint32_t output_type, uint32_t output_len, handle_t* binary_handle, smalltable_management_t* table_management, uint32_t info){
+void* table_gen_red(const char* src_name, const char* dest_name, uint32_t output_type, uint32_t output_len, handle_t* binary_handle, simplepim_management_t* table_management, uint32_t info){
+    int i;
+    struct dpu_set_t dpu;
+    struct timeval start_time;
+    struct timeval end_time;
     uint32_t outputs = table_management->free_space_start_pos;
     if(contains_table(dest_name, table_management)){
         outputs = lookup_table(dest_name, table_management) -> start;

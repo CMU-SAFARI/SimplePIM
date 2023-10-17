@@ -1,9 +1,10 @@
 #include "Zip.h"
-int i;
-struct dpu_set_t dpu;
 
-
-void table_zip(const char* src1_name, const char* src2_name, const char* dest_name, handle_t* binary_handle, smalltable_management_t* table_management){
+void table_zip(const char* src1_name, const char* src2_name, const char* dest_name, handle_t* binary_handle, simplepim_management_t* table_management){
+     int i;
+     struct dpu_set_t dpu;
+     struct timeval start_time;
+     struct timeval end_time;
      uint32_t outputs = table_management->free_space_start_pos;
      if(contains_table(dest_name, table_management)){
         outputs = lookup_table(dest_name, table_management) -> start;

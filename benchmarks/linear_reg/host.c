@@ -115,7 +115,7 @@ void get_output_file(int num_dpus, int dim, int num_elem){
 
 
 int main(){
-  smalltable_management_t* table_management = table_management_init(dpu_number);
+  simplepim_management_t* table_management = table_management_init(dpu_number);
   printf("dim: %d, num_elem: %d, iter: %d, lr: %f \n", dim, num_elements, iter, lr);
 
   // reading arguments 
@@ -166,9 +166,9 @@ int main(){
     printf("\n");
   }
   printf("end of reading data from file\n");
-  small_table_scatter("t1", elements, num_elements, (dim+1)*sizeof(T), table_management);
+  simplepim_scatter("t1", elements, num_elements, (dim+1)*sizeof(T), table_management);
   uint32_t data_offset = lookup_table("t1", table_management)->end; 
-  small_table_broadcast("t2", weights, 1, dim*sizeof(T),  table_management);
+  simplepim_broadcast("t2", weights, 1, dim*sizeof(T),  table_management);
   uint32_t weights_offset = lookup_table("t2", table_management)->end; 
 
   handle_t* va_handle = create_handle("lin_reg_funcs", REDUCE);
@@ -178,7 +178,7 @@ int main(){
 
     //free_table("t2", table_management);
     //free_table("t3", table_management);
-    small_table_broadcast("t2", weights, 1, dim*sizeof(T), table_management);
+    simplepim_broadcast("t2", weights, 1, dim*sizeof(T), table_management);
 
     for(int i=0; i<dim; i++){
       gradients_dpu[i] = res[i];

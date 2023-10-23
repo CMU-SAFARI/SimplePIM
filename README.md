@@ -9,11 +9,11 @@ We implement six applications with SimplePIM on UPMEM:
 - Linear Regression
 - Logistic Regression
 
-Previous manual UPMEM implementations of the same applications can be found in PrIM benchmark (https://github.com/CMU-SAFARI/prim-benchmarks), dpu_kmeans (https://github.com/upmem/dpu_kmeans) and prim-ml (https://github.com/CMU-SAFARI/pim-ml). These previous implementations can serve as baseline for measuring SimplePIM's performance as well as productivity improvements.
+Previous manual UPMEM implementations of the same applications can be found in [PrIM Benchmark](https://github.com/CMU-SAFARI/prim-benchmarks), [dpu_kmeans](https://github.com/upmem/dpu_kmeans) and [prim-ml](https://github.com/CMU-SAFARI/pim-ml). These previous implementations can serve as baseline for measuring SimplePIM's performance as well as productivity improvements.
 
 ## Citation
 Please cite the following papers if you find this repository useful.
-Jinfan Chen, Juan Gómez-Luna, Izzat El Hajj, Yuxin Guo and Onur Mutlu, "SimplePIM: A Software Framework for Productive and Efficient In-Memory Processing" (https://arxiv.org/abs/2310.01893), International Conference on Parallel Architectures and Compilation Techniques (PACT), 2023.
+Jinfan Chen, Juan Gómez-Luna, Izzat El Hajj, Yuxin Guo and Onur Mutlu, "[SimplePIM: A Software Framework for Productive and Efficient In-Memory Processing](https://arxiv.org/abs/2310.01893)" , International Conference on Parallel Architectures and Compilation Techniques (PACT), 2023.
 
 Bibtex entries for citation:
 ```
@@ -26,10 +26,11 @@ Bibtex entries for citation:
 ```
 
 ## Installation
+
+### Prerequisites
 Running PIM-ML requires installing the [UPMEM SDK](https://sdk.upmem.com). This benchmark designed to run on a server with real UPMEM modules, but they are also able to be run by the functional simulator in the UPMEM SDK.
 
-Getting Started
-
+### Getting Started
 Clone the repository:
 ```
 $ git clone https://github.com/CMU-SAFARI/SimplePIM.git

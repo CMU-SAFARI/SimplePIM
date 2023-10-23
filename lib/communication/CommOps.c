@@ -1,4 +1,8 @@
 #include "CommOps.h"
+
+/*
+    see description of the functions in CommOps.h
+*/
 void* malloc_scatter_aligned(uint64_t len, uint32_t type_size, simplepim_management_t* table_management){
     uint32_t num_dpus = table_management->num_dpus;
     uint32_t pad_len = calculate_pad_len(len , type_size, num_dpus);
@@ -197,11 +201,6 @@ void simplepim_allgather(char* const table_id, char* const new_table_id, simplep
 
 }
 
-void combine_func(void* p1, void* p2){
-    int32_t* int_p1 = (int32_t*)p1;
-    int32_t* int_p2 = (int32_t*)p2;
-    *int_p1 += *int_p2;
-}
 
 void simplepim_allreduce(char* const table_id, handle_t* binary_handle, simplepim_management_t* table_management){
     if(binary_handle->func_type == 1){
@@ -224,6 +223,9 @@ void simplepim_allreduce(char* const table_id, handle_t* binary_handle, simplepi
                 return;
             }
         }
+
+        void* lib=dlopen(binary_handle->so_bin_location, RTLD_NOW);
+        void (*combine_func)(void*, void*) = dlsym(lib, "combine_func");
 
         void* res = simplepim_gather(table_id, table_management);
         for(int i=1; i<num_dpus; i++){

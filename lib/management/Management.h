@@ -12,6 +12,7 @@
 #include "../processing/map/MapArgs.h"
 #include "../processing/zip/ZipArgs.h"
 
+// table_host_t holds information about one array, used by the framework and the end user does not need to care about its details
 typedef struct { 
    char* name;
    uint32_t start;
@@ -30,6 +31,7 @@ typedef struct {
    uint32_t type2;
 } table_host_t;
 
+// simplepim_management_t holds information about all registered arrays, the pim hardware like number of pim cores etc. (see the paper for detials)
 typedef struct { 
    uint32_t curr_space;
    uint32_t num_tables;
@@ -44,6 +46,11 @@ typedef struct {
 } simplepim_management_t;
 
 
+/*
+   table_management_init initialise a management interface, can be called by end users
+   add_table, contains_table, lookup_table, and free_table are used to retrieve information of an array from the management unit with its array id "name" (see the paper for detials)
+   max_len_dpu is a helper function used by the framework
+*/
 simplepim_management_t* table_management_init(uint32_t num_dpus);
 void add_table(table_host_t* table, simplepim_management_t* management);
 uint32_t contains_table(const char* name, simplepim_management_t* management);

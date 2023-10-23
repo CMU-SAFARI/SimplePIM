@@ -10,16 +10,17 @@
 #define REDUCE 1
 #define ZIP 2
 
+// handle_t contains information of where the handle's binary is located
 typedef struct {
    char* bin_location; 
    char* so_bin_location;
    uint32_t func_type;
 } handle_t;
 
-//struct timeval start_time;
-//struct timeval end_time;
 
-// type 0 is map, type 1 is gen_red, type 2 is zip
+/*
+   create_handle creates a handle that can be understood by communcation and processing operators (see the paper for details)
+*/
 handle_t* create_handle(const char* func_fname, uint32_t func_type);
 
 #endif 

@@ -1,4 +1,9 @@
 #include "Management.h"
+
+/*
+    see description of the functions in Management.h
+*/
+
 simplepim_management_t* table_management_init(uint32_t num_dpus){
 
     struct dpu_set_t set;

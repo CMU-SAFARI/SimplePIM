@@ -51,6 +51,16 @@ $ cd SimplePIM
 |   +-- red/
 |   +-- va/
 +-- lib/
+|   +-- communication/
+    |   +-- CommOps.c
+    |   +-- CommOps.h
+|   +-- management/
+    |   +-- Management.c
+    |   +-- Management.h
+|   +-- processing/
+    |   +-- gen_red
+    |   +-- map
+    |   +-- zip
 ```
 
 ## APIs 

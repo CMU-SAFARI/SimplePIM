@@ -38,6 +38,20 @@ $ cd SimplePIM
 ```
 
 ## Repository Structure
+```
+.
++-- LICENSE
++-- README.md
++-- gitignore
++-- benchmarks/
+|   +-- hist/
+|   +-- kmeans/
+|   +-- linear_reg/
+|   +-- log_reg/
+|   +-- red/
+|   +-- va/
++-- lib/
+```
 
 ## APIs 
 SimplePIM provides three APIs to the users. The management interface is under SimplePIM/lib/management/. The management interface code sets up the UPMEM hardware, records and manages information about the PIM arrays. The communication interface under SimplePIM/lib/communication/ contains code for PIM-to-PIM and host-PIM communication operators (gather, scatter, broadcast, allreduce, and allgather). Finally, the processing interface under SimplePIM/lib/processing/ contains the UPMEM implementation of array map, array zip and array reduction. Many workloads like histogram, kmeans and vector addition can be abstracted as a combination of the communication and processing operators.

@@ -13,7 +13,7 @@ Previous manual UPMEM implementations of the same applications can be found in P
 
 ## Citation
 Please cite the following papers if you find this repository useful.
-Jinfan Chen, Juan Gómez-Luna, Izzat El Hajj, Yuxin Guo and Onur Mutlu, "SimplePIM: A Software Framework for Productive and Efficient In-Memory Processing (https://arxiv.org/abs/2310.01893)", International Conference on Parallel Architectures and Compilation Techniques (PACT), 2023.
+Jinfan Chen, Juan Gómez-Luna, Izzat El Hajj, Yuxin Guo and Onur Mutlu, "SimplePIM: A Software Framework for Productive and Efficient In-Memory Processing" (https://arxiv.org/abs/2310.01893), International Conference on Parallel Architectures and Compilation Techniques (PACT), 2023.
 
 Bibtex entries for citation:
 ```
@@ -35,6 +35,13 @@ Clone the repository:
 $ git clone https://github.com/CMU-SAFARI/SimplePIM.git
 $ cd SimplePIM
 ```
+
+## Repository Structure
+
+## APIs 
+SimplePIM provides three APIs to the users. The management interface is under SimplePIM/lib/management/. The management interface code sets up the UPMEM hardware, records and manages information about the PIM arrays. The communication interface under SimplePIM/lib/communication/ contains code for PIM-to-PIM and host-PIM communication operators (gather, scatter, broadcast, allreduce, and allgather). Finally, the processing interface under SimplePIM/lib/processing/ contains the UPMEM implementation of array map, array zip and array reduction. Many workloads like histogram, kmeans and vector addition can be abstracted as a combination of the communication and processing operators.
+
+SimplePIM/lib/ contains other files that are helper functions for the ease of framework development.
 
 ## Running SimplePIM
 Each benchmark folder includes Makefiles to run the experiments:
